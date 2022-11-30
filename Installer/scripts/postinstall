@@ -1,13 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
-sudo chown -R root:wheel /Library/Audio/Plug-Ins/HAL
+sudo rm -rf /Library/Audio/Plug-Ins/HAL/JJOC2ch.driver
+sudo cp -R Installer/root/JJOC2ch.driver /Library/Audio/Plug-Ins/HAL
+sudo launchctl kickstart -kp system/com.apple.audio.coreaudiod
+rm -rf Installer/root/JJOC2ch.driver
 
-if [[ $(sw_vers -productVersion) == "10.9" ]] 
-	then
-		sudo sudo killall coreaudiod
-	else 
-		sudo launchctl kickstart -k system/com.apple.audio.coreaudiod
-fi
-
-
-	
+# sudo rm -rf /Library/Audio/Plug-Ins/HAL/JJOC16ch.driver
+# sudo cp -R Installer/root/JJOC16ch.driver /Library/Audio/Plug-Ins/HAL
+# sudo launchctl kickstart -kp system/com.apple.audio.coreaudiod
+# rm -rf Installer/root/JJOC16ch.driver

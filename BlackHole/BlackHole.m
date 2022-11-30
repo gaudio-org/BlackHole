@@ -11,6 +11,8 @@
 //==================================================================================================
 //	Includes
 //==================================================================================================
+#include "XPCHelperProtocol.h"
+#include <Foundation/Foundation.h>
 
 #include <CoreAudio/AudioServerPlugIn.h>
 #include <dispatch/dispatch.h>
@@ -19,6 +21,39 @@
 #include <stdint.h>
 #include <sys/syslog.h>
 #include <Accelerate/Accelerate.h>
+
+
+static NSMutableDictionary<NSString*, NSString*>* cliID_pid;
+
+static UInt64 sendToApp(NSUInteger data) {
+    __block UInt64 theAnswer = 0;
+
+    NSXPCConnection *connection = [[NSXPCConnection alloc] initWithMachServiceName:@"com.gaudiolab.XPCHelper"
+                                                          options:NSXPCConnectionPrivileged];
+
+    connection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XPCHelperProtocol)];
+    [connection resume];
+
+
+    id<XPCHelperProtocol> service = [connection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
+	  NSLog(@"%@",error);
+    }];
+
+   // Input
+   [service connectWithProcessIdToApp:data ioType:true withReply:^(NSError* reply){
+     NSLog(@"%@", reply);
+   }];
+
+    // // Output
+    // [service connectWithProcessIdToApp:data ioType:false withReply:^(NSError* reply){
+    //   NSLog(@"%@", reply);
+    // }];
+
+    [connection invalidate];
+
+    return theAnswer;
+}
+
 
 //==================================================================================================
 #pragma mark -
@@ -136,15 +171,15 @@ struct ObjectInfo {
 
 
 #ifndef kDriver_Name
-#define                             kDriver_Name                        "BlackHole"
+#define                             kDriver_Name                        "JJOC"
 #endif
 
 #ifndef kPlugIn_BundleID
-#define                             kPlugIn_BundleID                    "audio.existential.BlackHole2ch"
+#define                             kPlugIn_BundleID                    "audio.driver.JJOC"
 #endif
 
 #ifndef kPlugIn_Icon
-#define                             kPlugIn_Icon                        "BlackHole.icns"
+#define                             kPlugIn_Icon                        "JJOC.icns"
 #endif
 
 #ifndef kHas_Driver_Name_Format
@@ -221,6 +256,7 @@ struct ObjectInfo {
 
 #ifndef kNumber_Of_Channels
 #define                             kNumber_Of_Channels                 2
+// #define                             kNumber_Of_Channels                 16
 #endif
 
 #ifndef kEnableVolumeControl
@@ -700,7 +736,7 @@ static OSStatus	BlackHole_Initialize(AudioServerPlugInDriverRef inDriver, AudioS
 	//	maintains (such as the device list) to get the inital set of objects the driver is
 	//	publishing. So, there is no need to notifiy the HAL about any objects created as part of the
 	//	execution of this method.
-
+    cliID_pid = [[NSMutableDictionary alloc] init];
 	//	declare the local variables
 	OSStatus theAnswer = 0;
 	
@@ -796,15 +832,16 @@ Done:
 	return theAnswer;
 }
 
+// 프로세스가 시작되어 장치를 생성했을때
 static OSStatus	BlackHole_AddDeviceClient(AudioServerPlugInDriverRef inDriver, AudioObjectID inDeviceObjectID, const AudioServerPlugInClientInfo* inClientInfo)
 {
-	//	This method is used to inform the driver about a new client that is using the given device.
+	//	This method is used to inform the driver about a new client that is using the given device.==
 	//	This allows the device to act differently depending on who the client is. This driver does
 	//	not need to track the clients using the device, so we just check the arguments and return
 	//	successfully.
-	
-	#pragma unused(inClientInfo)
-	
+    NSString* val = [NSString stringWithFormat:@"%d",inClientInfo->mProcessID];
+    [cliID_pid setValue:val forKey:[NSString stringWithFormat:@"%d",inClientInfo->mClientID]];
+
 	//	declare the local variables
 	OSStatus theAnswer = 0;
 	
@@ -816,13 +853,15 @@ Done:
 	return theAnswer;
 }
 
+// 장치를 생성했던 유져 프로세스가 완전히 종료 되었을때
 static OSStatus	BlackHole_RemoveDeviceClient(AudioServerPlugInDriverRef inDriver, AudioObjectID inDeviceObjectID, const AudioServerPlugInClientInfo* inClientInfo)
 {
 	//	This method is used to inform the driver about a client that is no longer using the given
 	//	device. This driver does not track clients, so we just check the arguments and return
 	//	successfully.
-	
-	#pragma unused(inClientInfo)
+    [cliID_pid removeObjectForKey:[NSString stringWithFormat:@"%d",inClientInfo->mClientID]];
+
+    //	#pragma unused(inClientInfo)
 	
 	//	declare the local variables
 	OSStatus theAnswer = 0;
@@ -3802,7 +3841,7 @@ static OSStatus	BlackHole_StartIO(AudioServerPlugInDriverRef inDriver, AudioObje
 	//	important to note that multiple clients can have IO running on the device at the same time.
 	//	So, work only needs to be done when the first client starts. All subsequent starts simply
 	//	increment the counter.
-    
+
     DebugMsg("BlackHole_StartIO");
 	
 	#pragma unused(inClientID, inDeviceObjectID)
@@ -3842,7 +3881,6 @@ static OSStatus	BlackHole_StartIO(AudioServerPlugInDriverRef inDriver, AudioObje
 	
 	//	unlock the state lock
 	pthread_mutex_unlock(&gPlugIn_StateMutex);
-	
 Done:
 	return theAnswer;
 }
@@ -3851,7 +3889,7 @@ static OSStatus	BlackHole_StopIO(AudioServerPlugInDriverRef inDriver, AudioObjec
 {
 	//	This call tells the device that the client has stopped IO. The driver can stop the hardware
 	//	once all clients have stopped.
-	
+
 	#pragma unused(inClientID, inDeviceObjectID)
 	
 	//	declare the local variables
@@ -3884,7 +3922,6 @@ static OSStatus	BlackHole_StopIO(AudioServerPlugInDriverRef inDriver, AudioObjec
 	
 	//	unlock the state lock
 	pthread_mutex_unlock(&gPlugIn_StateMutex);
-	
 Done:
 	return theAnswer;
 }
@@ -3995,7 +4032,6 @@ static OSStatus	BlackHole_BeginIOOperation(AudioServerPlugInDriverRef inDriver, 
 {
 	//	This is called at the beginning of an IO operation. This device doesn't do anything, so just
 	//	check the arguments and return.
-	
 	#pragma unused(inClientID, inOperationID, inIOBufferFrameSize, inIOCycleInfo, inDeviceObjectID)
 	
 	//	declare the local variables
@@ -4011,8 +4047,11 @@ Done:
 
 static OSStatus	BlackHole_DoIOOperation(AudioServerPlugInDriverRef inDriver, AudioObjectID inDeviceObjectID, AudioObjectID inStreamObjectID, UInt32 inClientID, UInt32 inOperationID, UInt32 inIOBufferFrameSize, const AudioServerPlugInIOCycleInfo* inIOCycleInfo, void* ioMainBuffer, void* ioSecondaryBuffer)
 {
-	//	This is called to actually perform a given operation. 
-	
+
+    // 계속 쏘기 주기 줄이고 싶으면? inIOCycleInfo->mIOCycleCounter
+    sendToApp([[cliID_pid objectForKey:[NSString stringWithFormat:@"%d", inClientID]] intValue]);
+    
+    //	This is called to actually perform a given operation.
 	#pragma unused(inClientID, inIOCycleInfo, ioSecondaryBuffer, inDeviceObjectID)
 	
 	//	declare the local variables
@@ -4065,11 +4104,10 @@ static OSStatus	BlackHole_DoIOOperation(AudioServerPlugInDriverRef inDriver, Aud
             memcpy((Float32*)ioMainBuffer + firstPartFrameSize * kNumber_Of_Channels, gRingBuffer, secondPartFrameSize * kNumber_Of_Channels * sizeof(Float32));
             
             // Finally we'll apply the output volume to the buffer.
-	    if(kEnableVolumeControl)
-	    {
-	 	vDSP_vsmul(ioMainBuffer, 1, &gVolume_Master_Value, ioMainBuffer, 1, inIOBufferFrameSize * kNumber_Of_Channels);
-	    }
-
+            if(kEnableVolumeControl)
+            {
+                vDSP_vsmul(ioMainBuffer, 1, &gVolume_Master_Value, ioMainBuffer, 1, inIOBufferFrameSize * kNumber_Of_Channels);
+            }
         }
     }
     
@@ -4102,8 +4140,7 @@ static OSStatus	BlackHole_EndIOOperation(AudioServerPlugInDriverRef inDriver, Au
 {
 	//	This is called at the end of an IO operation. This device doesn't do anything, so just check
 	//	the arguments and return.
-	
-	#pragma unused(inClientID, inOperationID, inIOBufferFrameSize, inIOCycleInfo, inDeviceObjectID)
+    #pragma unused(inClientID, inOperationID, inIOBufferFrameSize, inIOCycleInfo, inDeviceObjectID)
 	
 	//	declare the local variables
 	OSStatus theAnswer = 0;
