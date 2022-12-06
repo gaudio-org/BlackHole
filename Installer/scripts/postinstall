@@ -1,11 +1,20 @@
 #!/usr/bin/env zsh
 
-sudo rm -rf /Library/Audio/Plug-Ins/HAL/JJOC2ch.driver
-sudo cp -R Installer/root/JJOC2ch.driver /Library/Audio/Plug-Ins/HAL
-sudo launchctl kickstart -kp system/com.apple.audio.coreaudiod
-rm -rf Installer/root/JJOC2ch.driver
+for driverType in "MIC" "SPK"
+do
+    if [ driverType = "MIC" ]
+    then
+        channels=1
+    else
+        channels=1
+    fi
 
-# sudo rm -rf /Library/Audio/Plug-Ins/HAL/JJOC16ch.driver
-# sudo cp -R Installer/root/JJOC16ch.driver /Library/Audio/Plug-Ins/HAL
-# sudo launchctl kickstart -kp system/com.apple.audio.coreaudiod
-# rm -rf Installer/root/JJOC16ch.driver
+    ch=${channels}"ch"
+    driverName="JJOC-${driverType}"
+
+    sudo rm -rf /Library/Audio/Plug-Ins/HAL/${driverName}${ch}.driver
+    sudo cp -R Installer/root/${driverName}${ch}.driver /Library/Audio/Plug-Ins/HAL
+    rm -rf Installer/root/${driverName}${ch}.driver
+done
+
+sudo launchctl kickstart -kp system/com.apple.audio.coreaudiod
