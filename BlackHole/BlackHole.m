@@ -174,6 +174,10 @@ struct ObjectInfo {
 #define                             kDriver_Name                        "JJOC"
 #endif
 
+#ifndef kDriver_Type
+#define                             kDriver_Type                        "MIC"
+#endif
+
 #ifndef kPlugIn_BundleID
 #define                             kPlugIn_BundleID                    "audio.driver.JJOC"
 #endif
@@ -187,38 +191,37 @@ struct ObjectInfo {
 #endif
 
 #if kHas_Driver_Name_Format
-#define                             kDriver_Name_Format                 "%ich"
-#define                             kBox_UID                            kDriver_Name kDriver_Name_Format "_UID"
-#define                             kDevice_UID                         kDriver_Name kDriver_Name_Format "_UID"
-#define                             kDevice2_UID                        kDriver_Name kDriver_Name_Format "_2_UID"
-#define                             kDevice_ModelUID                    kDriver_Name kDriver_Name_Format "_ModelUID"
+#define                             kBox_UID                            kDriver_Name kDriver_Type "_UID"
+#define                             kDevice_UID                         kDriver_Name kDriver_Type "_UID"
+#define                             kDevice2_UID                        kDriver_Name kDriver_Type "_2_UID"
+#define                             kDevice_ModelUID                    kDriver_Name kDriver_Type "_ModelUID"
 
 
 #ifndef kDevice_Name
-#define                             kDevice_Name                        kDriver_Name " %ich"
+#define                             kDevice_Name                        kDriver_Name " " kDriver_Type
 #endif
 
 #ifndef kDevice2_Name
-#define                             kDevice2_Name                       kDriver_Name " %ich 2"
+#define                             kDevice2_Name                       kDriver_Name " " kDriver_Type " 2"
 #endif
 
 
-#else
-#define                             kBox_UID                            kDriver_Name "_UID"
-#define                             kDevice_UID                         kDriver_Name "_UID"
-#define                             kDevice2_UID                        kDriver_Name "_2_UID"
-#define                             kDevice_ModelUID                    kDriver_Name "_ModelUID"
+#else // #if kHas_Driver_Name_Format
+#define                             kBox_UID                            kDriver_Name kDriver_Type "_UID"
+#define                             kDevice_UID                         kDriver_Name kDriver_Type "_UID"
+#define                             kDevice2_UID                        kDriver_Name kDriver_Type "_2_UID"
+#define                             kDevice_ModelUID                    kDriver_Name kDriver_Type "_ModelUID"
 
 
 #ifndef kDevice_Name
-#define                             kDevice_Name                        kDriver_Name " "
+#define                             kDevice_Name                        kDriver_Name " " kDriver_Type
 #endif
 
 #ifndef kDevice2_Name
-#define                             kDevice2_Name                       kDriver_Name " Mirror"
+#define                             kDevice2_Name                       kDriver_Name " " kDriver_Type " Mirror"
 #endif
 
-#endif
+#endif // #if kHas_Driver_Name_Format
 
 #ifndef kDevice_IsHidden
 #define                             kDevice_IsHidden                    false
@@ -436,7 +439,7 @@ static AudioServerPlugInDriverRef            gAudioServerPlugInDriverRef        
 #define RETURN_FORMATTED_STRING(_string_fmt)                          \
 if(kHas_Driver_Name_Format)                                           \
 {                                                                     \
-	return CFStringCreateWithFormat(NULL, NULL, CFSTR(_string_fmt), kNumber_Of_Channels); \
+	return CFStringCreateWithFormat(NULL, NULL, CFSTR(_string_fmt)); \
 }                                                                     \
 else                                                                  \
 {                                                                     \
@@ -1480,7 +1483,7 @@ static OSStatus	BlackHole_GetPlugInPropertyData(AudioServerPlugInDriverRef inDri
 
 			if(CFStringCompare(*((CFStringRef*)inQualifierData), boxUID, 0) == kCFCompareEqualTo)
 			{
-				CFStringRef formattedString = CFStringCreateWithFormat(NULL, NULL, CFSTR(kBox_UID), kNumber_Of_Channels);
+				CFStringRef formattedString = CFStringCreateWithFormat(NULL, NULL, CFSTR(kBox_UID));
 				if(CFStringCompare(*((CFStringRef*)inQualifierData), formattedString, 0) == kCFCompareEqualTo)
 				{
 					*((AudioObjectID*)outData) = kObjectID_Box;

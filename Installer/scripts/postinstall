@@ -1,20 +1,12 @@
 #!/usr/bin/env zsh
 
+driverName="JJOC"
+
 for driverType in "MIC" "SPK"
 do
-    if [ driverType = "MIC" ]
-    then
-        channels=1
-    else
-        channels=1
-    fi
-
-    ch=${channels}"ch"
-    driverName="JJOC-${driverType}"
-
-    sudo rm -rf /Library/Audio/Plug-Ins/HAL/${driverName}${ch}.driver
-    sudo cp -R Installer/root/${driverName}${ch}.driver /Library/Audio/Plug-Ins/HAL
-    rm -rf Installer/root/${driverName}${ch}.driver
+    sudo rm -rf /Library/Audio/Plug-Ins/HAL/${driverName}${driverType}.driver
+    sudo cp -R Installer/root/${driverName}${driverType}.driver /Library/Audio/Plug-Ins/HAL
+    rm -rf Installer/root/${driverName}${driverType}.driver
 done
 
 sudo launchctl kickstart -kp system/com.apple.audio.coreaudiod
