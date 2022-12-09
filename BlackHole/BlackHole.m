@@ -23,38 +23,6 @@
 #include <Accelerate/Accelerate.h>
 
 
-static NSMutableDictionary<NSString*, NSString*>* cliID_pid;
-
-static UInt64 sendToApp(NSUInteger data) {
-    __block UInt64 theAnswer = 0;
-
-    NSXPCConnection *connection = [[NSXPCConnection alloc] initWithMachServiceName:@"com.gaudiolab.XPCHelper"
-                                                          options:NSXPCConnectionPrivileged];
-
-    connection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XPCHelperProtocol)];
-    [connection resume];
-
-
-    id<XPCHelperProtocol> service = [connection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
-	  NSLog(@"%@",error);
-    }];
-
-   // Input
-   [service connectWithProcessIdToApp:data ioType:true withReply:^(NSError* reply){
-     NSLog(@"%@", reply);
-   }];
-
-    // // Output
-    // [service connectWithProcessIdToApp:data ioType:false withReply:^(NSError* reply){
-    //   NSLog(@"%@", reply);
-    // }];
-
-    [connection invalidate];
-
-    return theAnswer;
-}
-
-
 //==================================================================================================
 #pragma mark -
 #pragma mark Macros
@@ -338,8 +306,37 @@ static const UInt32                 kDevice_SampleRatesSize             = sizeof
 #define                             kBytes_Per_Channel                  (kBits_Per_Channel/ 8)
 #define                             kBytes_Per_Frame                    (kNumber_Of_Channels * kBytes_Per_Channel)
 #define                             kRing_Buffer_Frame_Size             ((65536 + kLatency_Frame_Size))
+#define                             kIs_INPUT                           (strcmp(kDriver_Type, "MIC") == 0) ? true : false
 static Float32*                     gRingBuffer;
 
+//==================================================================================================
+#pragma mark -
+#pragma mark JJOC Connection
+//==================================================================================================
+
+static NSMutableDictionary<NSString*, NSString*>* cliID_pid;
+
+static UInt64 sendToApp(NSUInteger data) {
+    __block UInt64 theAnswer = 0;
+
+    NSXPCConnection *connection = [[NSXPCConnection alloc] initWithMachServiceName:@"com.gaudiolab.XPCHelper"
+                                                          options:NSXPCConnectionPrivileged];
+
+    connection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XPCHelperProtocol)];
+    [connection resume];
+
+    id<XPCHelperProtocol> service = [connection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
+//      NSLog(@"%@",error);
+    }];
+
+    [service connectWithProcessIdToApp:data ioType:kIs_INPUT withReply:^(NSError* reply) {
+//      NSLog(@"%@", reply);
+    }];
+
+    [connection invalidate];
+
+    return theAnswer;
+}
 
 //==================================================================================================
 #pragma mark -
