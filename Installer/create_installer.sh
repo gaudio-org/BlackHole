@@ -35,5 +35,14 @@ do
     rm -r build
 
     # Sign
-    codesign --force --deep --options runtime --sign S4VKPVFH2D Installer/root/${driverName}${driverType}.driver
+    codesign --force --deep --options runtime --sign 'Developer ID Application: Gaudio Lab (BPQH2TQNZ4)' Installer/root/${driverName}${driverType}.driver
+
+    # TODO:zip
+
+    # notarization 
+    # xcrun altool --notarize-app --primary-bundle-id "gaudio.driver.JJOCMIC" --username "info@gaudiolab.com" --password "iego-linv-bbgk-azmn" --asc-provider "BPQH2TQNZ4" --file Installer/root/JJOCMIC.driver.zip
+    # xcrun altool --notarize-app --primary-bundle-id "gaudio.driver.JJOCSPK" --username "info@gaudiolab.com" --password "iego-linv-bbgk-azmn" --asc-provider "BPQH2TQNZ4" --file Installer/root/JJOCSPK.driver.zip
+
+    # check notarization 
+    # xcrun altool --notarization-history 0 -u "info@gaudiolab.com" -p "iego-linv-bbgk-azmn"
 done
