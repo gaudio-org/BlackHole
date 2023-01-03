@@ -10,11 +10,11 @@
 // The protocol that this service will vend as its API. This header file will
 // also need to be visible to the process hosting the service.
 @protocol XPCHelperProtocol
-- (void) upperCaseString:(NSString *)aString withReply:(void (^)(NSString *))reply;
+- (void)upperCaseString:(NSString *)aString withReply:(void (^)(NSString *))reply;
 
-- (void) registerAsAppWithListenerEndpoint:(NSXPCListenerEndpoint*)endpoint reply:(void (^)(void))reply;
-- (void) unregisterAsApp;
-- (void) connectWithProcessIdToApp:(NSUInteger)processId ioType:(bool)isInput withReply:(void (^)(NSError*))reply;
+- (void)registerAsAppWithListenerEndpoint:(NSXPCListenerEndpoint *)endpoint reply:(void (^)(void))reply;
+- (void)unregisterAsApp;
+- (void)connectWithProcessIdToApp:(NSUInteger)processId ioType:(bool)isInput withReply:(void (^)(NSError *))reply;
 @end
 
 /*
