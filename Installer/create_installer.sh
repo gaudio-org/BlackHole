@@ -12,8 +12,12 @@ do
     if [ ${driverType} = "MIC" ];
     then
         channels=1
+        hasInput=true
+        hasOutput=false
     else
         channels=2
+        hasInput=false
+        hasOutput=true
     fi
 
     bundleID="gaudio.driver.${driverName}${driverType}"
@@ -29,6 +33,10 @@ do
     kDriver_Type=\"'$driverType'\"
     kPlugIn_BundleID=\"'$bundleID'\"
     kSampleRates='$sampleRates'
+    kDevice_HasInput='$hasInput'
+    kDevice_HasOutput='$hasOutput'
+    kDevice2_HasInput='$hasOutput'
+    kDevice2_HasOutput='$hasInput'
     kPlugIn_Icon=\"'$icon'\"'
 
     mv build/JJOC.driver installer/root/${driverName}${driverType}.driver
@@ -36,6 +44,7 @@ do
 
     # Sign
     codesign --force --deep --options runtime --sign 'Developer ID Application: Gaudio Lab (BPQH2TQNZ4)' Installer/root/${driverName}${driverType}.driver
+    # codesign --force --deep --options runtime --sign '3rd Party Mac Developer Application: Gaudio Lab (BPQH2TQNZ4)' Installer/root/${driverName}${driverType}.driver
 
     # TODO:zip
 
