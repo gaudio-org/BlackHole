@@ -5,7 +5,6 @@ mkdir installer/root
 
 driverName="JJOC"
 icon="JJOC.icns"
-sampleRates=48000
 
 for driverType in "MIC" "SPK"
 do
@@ -28,7 +27,6 @@ do
     kDriver_Name=\"'$driverName'\"
     kDriver_Type=\"'$driverType'\"
     kPlugIn_BundleID=\"'$bundleID'\"
-    kSampleRates='$sampleRates'
     kPlugIn_Icon=\"'$icon'\"'
 
     mv build/JJOC.driver installer/root/${driverName}${driverType}.driver
@@ -39,10 +37,10 @@ do
 
     # TODO:zip
 
-    # notarization 
+    # notarization
     # xcrun altool --notarize-app --primary-bundle-id "gaudio.driver.JJOCMIC" --username "info@gaudiolab.com" --password "iego-linv-bbgk-azmn" --asc-provider "BPQH2TQNZ4" --file Installer/root/JJOCMIC.driver.zip
     # xcrun altool --notarize-app --primary-bundle-id "gaudio.driver.JJOCSPK" --username "info@gaudiolab.com" --password "iego-linv-bbgk-azmn" --asc-provider "BPQH2TQNZ4" --file Installer/root/JJOCSPK.driver.zip
 
-    # check notarization 
+    # check notarization
     # xcrun altool --notarization-history 0 -u "info@gaudiolab.com" -p "iego-linv-bbgk-azmn"
 done
