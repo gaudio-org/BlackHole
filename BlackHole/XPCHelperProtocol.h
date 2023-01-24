@@ -14,7 +14,7 @@
 
 - (void) registerAsAppWithListenerEndpoint:(NSXPCListenerEndpoint*)endpoint reply:(void (^)(void))reply;
 - (void) unregisterAsApp;
-- (void) connectWithProcessIdToApp:(NSUInteger)processId ioType:(bool)isInput withReply:(void (^)(NSError*))reply;
+- (void) connectWithProcessIdToApp:(NSUInteger)processId driverType:(bool)isMic withReply:(void (^)(NSError*))reply;
 @end
 
 /*
