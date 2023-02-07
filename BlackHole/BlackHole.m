@@ -4047,11 +4047,8 @@ static OSStatus	BlackHole_WillDoIOOperation(AudioServerPlugInDriverRef inDriver,
 	switch(inOperationID)
 	{
 		case kAudioServerPlugInIOOperationReadInput:
-			willDo = true;
-			willDoInPlace = true;
-			break;
-			
 		case kAudioServerPlugInIOOperationWriteMix:
+    case kAudioServerPlugInIOOperationProcessOutput:
 			willDo = true;
 			willDoInPlace = true;
 			break;
