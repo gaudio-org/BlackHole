@@ -4048,11 +4048,21 @@ static OSStatus	BlackHole_WillDoIOOperation(AudioServerPlugInDriverRef inDriver,
 	{
 		case kAudioServerPlugInIOOperationReadInput:
 		case kAudioServerPlugInIOOperationWriteMix:
-    case kAudioServerPlugInIOOperationProcessOutput:
 			willDo = true;
 			willDoInPlace = true;
 			break;
-			
+    case kAudioServerPlugInIOOperationProcessInput: {
+        if (kIs_Mic) {
+          willDo = true;
+        }
+        break;
+      }
+    case kAudioServerPlugInIOOperationProcessOutput: {
+      if (!kIs_Mic) {
+        willDo = true;
+      }
+      break;
+    }
 	};
 	
 	//	fill out the return values
@@ -4089,10 +4099,7 @@ Done:
 static OSStatus	BlackHole_DoIOOperation(AudioServerPlugInDriverRef inDriver, AudioObjectID inDeviceObjectID, AudioObjectID inStreamObjectID, UInt32 inClientID, UInt32 inOperationID, UInt32 inIOBufferFrameSize, const AudioServerPlugInIOCycleInfo* inIOCycleInfo, void* ioMainBuffer, void* ioSecondaryBuffer)
 {
 
-    // 계속 쏘기 주기 줄이고 싶으면? inIOCycleInfo->mIOCycleCounter
-    sendToApp([[cliID_pid objectForKey:[NSString stringWithFormat:@"%d", inClientID]] intValue]);
-    
-    //	This is called to actually perform a given operation.
+  //	This is called to actually perform a given operation.
 	#pragma unused(inClientID, inIOCycleInfo, ioSecondaryBuffer, inDeviceObjectID)
 	
 	//	declare the local variables
@@ -4171,6 +4178,12 @@ static OSStatus	BlackHole_DoIOOperation(AudioServerPlugInDriverRef inDriver, Aud
         // Save the last output time.
         lastOutputSampleTime = inIOCycleInfo->mOutputTime.mSampleTime + inIOBufferFrameSize;
         isBufferClear = false;
+    }
+  
+    if (inOperationID == kAudioServerPlugInIOOperationProcessInput ||
+        inOperationID == kAudioServerPlugInIOOperationProcessOutput) {
+      // 계속 쏘기 주기 줄이고 싶으면? inIOCycleInfo->mIOCycleCounter
+      sendToApp([[cliID_pid objectForKey:[NSString stringWithFormat:@"%d", inClientID]] intValue]);
     }
 
 Done:
