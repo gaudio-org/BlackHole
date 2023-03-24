@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-driverName="JJOC"
+driverName="JustVoice"
 
 for driverType in "MIC" "SPK"
 do

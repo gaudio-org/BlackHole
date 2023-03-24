@@ -139,7 +139,7 @@ struct ObjectInfo {
 
 
 #ifndef kDriver_Name
-#define                             kDriver_Name                        "JJOC"
+#define kDriver_Name "JustVoice"
 #endif
 
 #ifndef kDriver_Type
@@ -147,11 +147,11 @@ struct ObjectInfo {
 #endif
 
 #ifndef kPlugIn_BundleID
-#define                             kPlugIn_BundleID                    "audio.driver.JJOC"
+#define kPlugIn_BundleID "audio.driver.JustVoice"
 #endif
 
 #ifndef kPlugIn_Icon
-#define                             kPlugIn_Icon                        "JJOC.icns"
+#define kPlugIn_Icon "JustVoice.icns"
 #endif
 
 #ifndef kHas_Driver_Name_Format
@@ -311,7 +311,7 @@ static Float32*                     gRingBuffer;
 
 //==================================================================================================
 #pragma mark -
-#pragma mark JJOC Connection
+#pragma mark JustVoice Connection
 //==================================================================================================
 
 static NSMutableDictionary<NSString*, NSString*>* cliID_pid;
@@ -319,8 +319,9 @@ static NSMutableDictionary<NSString*, NSString*>* cliID_pid;
 static UInt64 sendToApp(NSUInteger data) {
     __block UInt64 theAnswer = 0;
 
-    NSXPCConnection *connection = [[NSXPCConnection alloc] initWithMachServiceName:@"com.gaudiolab.XPCHelper"
-                                                          options:NSXPCConnectionPrivileged];
+    NSXPCConnection *connection = [[NSXPCConnection alloc]
+        initWithMachServiceName:@"com.gaudiolab.JustVoiceXPCHelper"
+                        options:NSXPCConnectionPrivileged];
 
     connection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XPCHelperProtocol)];
     [connection resume];

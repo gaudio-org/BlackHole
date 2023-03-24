@@ -16,7 +16,7 @@
 		3D8966432849C318002AB3F0 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D7477AC1578168D00412279 /* CoreFoundation.framework */; };
 		3D8966462849C318002AB3F0 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 03FDCADB233FAE0500101681 /* LICENSE */; };
 		3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 039FF2572341B6E800400D7A /* CHANGELOG.md */; };
-		B03D3162291417FB00CD183A /* JJOC.icns in Resources */ = {isa = PBXBuildFile; fileRef = B03D3161291417FB00CD183A /* JJOC.icns */; };
+		B06EAA0A29CD3D1A00349AE0 /* JustVoice.icns in Resources */ = {isa = PBXBuildFile; fileRef = B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,11 +50,11 @@
 		3D88D48C285BBA5800629399 /* BlackHoleTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BlackHoleTests; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D88D48E285BBA5800629399 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3D89662F2849BF1A002AB3F0 /* VERSION */ = {isa = PBXFileReference; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
-		3D89664D2849C318002AB3F0 /* JJOC.driver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JJOC.driver; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D89664D2849C318002AB3F0 /* JustVoice.driver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JustVoice.driver; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D8966882849D45F002AB3F0 /* postinstall */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = postinstall; sourceTree = "<group>"; };
 		3D8966892849D45F002AB3F0 /* preinstall */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = preinstall; sourceTree = "<group>"; };
 		B00637E6292F03C300D50A5A /* XPCHelperProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPCHelperProtocol.h; sourceTree = "<group>"; };
-		B03D3161291417FB00CD183A /* JJOC.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = JJOC.icns; sourceTree = "<group>"; };
+		B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = JustVoice.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,8 +81,8 @@
 		2D616EF015B8C82500D598BD /* BlackHole */ = {
 			isa = PBXGroup;
 			children = (
+				B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */,
 				B00637E6292F03C300D50A5A /* XPCHelperProtocol.h */,
-				B03D3161291417FB00CD183A /* JJOC.icns */,
 				3D08380E284A7DE100C69403 /* BlackHole.plist */,
 				03FDCAD9233F235500101681 /* BlackHole.icns */,
 				2D616EF215B8C82500D598BD /* BlackHole.m */,
@@ -108,7 +108,7 @@
 		2D7477AA1578168D00412279 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3D89664D2849C318002AB3F0 /* JJOC.driver */,
+				3D89664D2849C318002AB3F0 /* JustVoice.driver */,
 				3D88D48C285BBA5800629399 /* BlackHoleTests */,
 			);
 			name = Products;
@@ -190,7 +190,7 @@
 			);
 			name = BlackHole;
 			productName = AudioNULLDriver;
-			productReference = 3D89664D2849C318002AB3F0 /* JJOC.driver */;
+			productReference = 3D89664D2849C318002AB3F0 /* JustVoice.driver */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -235,11 +235,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B03D3162291417FB00CD183A /* JJOC.icns in Resources */,
 				3D8966462849C318002AB3F0 /* LICENSE in Resources */,
 				3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */,
 				3D083818284A7F1200C69403 /* VERSION in Resources */,
 				3D083819284A7F1500C69403 /* README.md in Resources */,
+				B06EAA0A29CD3D1A00349AE0 /* JustVoice.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,8 +556,8 @@
 				INFOPLIST_FILE = BlackHole/BlackHole.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JJOC;
-				PRODUCT_NAME = JJOC;
+				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JustVoice;
+				PRODUCT_NAME = JustVoice;
 				WRAPPER_EXTENSION = driver;
 			};
 			name = Release;
@@ -576,8 +576,8 @@
 				INFOPLIST_FILE = BlackHole/BlackHole.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JJOC;
-				PRODUCT_NAME = JJOC;
+				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JustVoice;
+				PRODUCT_NAME = JustVoice;
 				WRAPPER_EXTENSION = driver;
 			};
 			name = Debug;
@@ -596,8 +596,8 @@
 				INFOPLIST_FILE = BlackHole/BlackHole.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JJOC;
-				PRODUCT_NAME = JJOC;
+				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JustVoice;
+				PRODUCT_NAME = JustVoice;
 				WRAPPER_EXTENSION = driver;
 			};
 			name = "Debug-Opt";
