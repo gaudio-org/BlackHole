@@ -16,7 +16,7 @@
 		3D8966432849C318002AB3F0 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D7477AC1578168D00412279 /* CoreFoundation.framework */; };
 		3D8966462849C318002AB3F0 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 03FDCADB233FAE0500101681 /* LICENSE */; };
 		3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 039FF2572341B6E800400D7A /* CHANGELOG.md */; };
-		B06EAA0A29CD3D1A00349AE0 /* JustVoice.icns in Resources */ = {isa = PBXBuildFile; fileRef = B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */; };
+		B0DCD25429DAAE700007F938 /* JustVoice.icns in Resources */ = {isa = PBXBuildFile; fileRef = B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -235,11 +235,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0DCD25429DAAE700007F938 /* JustVoice.icns in Resources */,
 				3D8966462849C318002AB3F0 /* LICENSE in Resources */,
 				3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */,
 				3D083818284A7F1200C69403 /* VERSION in Resources */,
 				3D083819284A7F1500C69403 /* README.md in Resources */,
-				B06EAA0A29CD3D1A00349AE0 /* JustVoice.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
