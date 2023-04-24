@@ -314,7 +314,7 @@ static Float32*                     gRingBuffer;
 #pragma mark JustVoice Connection
 //==================================================================================================
 
-static NSMutableDictionary<NSString*, NSString*>* cliID_pid;
+static NSCache<NSString*, NSString*>* cliID_pid;
 
 static UInt64 sendToApp(NSUInteger data) {
     __block UInt64 theAnswer = 0;
@@ -736,7 +736,10 @@ static OSStatus	BlackHole_Initialize(AudioServerPlugInDriverRef inDriver, AudioS
 	//	maintains (such as the device list) to get the inital set of objects the driver is
 	//	publishing. So, there is no need to notifiy the HAL about any objects created as part of the
 	//	execution of this method.
-    cliID_pid = [[NSMutableDictionary alloc] init];
+    cliID_pid = [[NSCache alloc] init];
+    cliID_pid.countLimit = 6;
+    cliID_pid.totalCostLimit = 6 * 1024 * 1024;
+    
 	//	declare the local variables
 	OSStatus theAnswer = 0;
 	
@@ -840,7 +843,7 @@ static OSStatus	BlackHole_AddDeviceClient(AudioServerPlugInDriverRef inDriver, A
 	//	not need to track the clients using the device, so we just check the arguments and return
 	//	successfully.
     NSString* val = [NSString stringWithFormat:@"%d",inClientInfo->mProcessID];
-    [cliID_pid setValue:val forKey:[NSString stringWithFormat:@"%d",inClientInfo->mClientID]];
+    [cliID_pid setObject:val forKey:[NSString stringWithFormat:@"%d",inClientInfo->mClientID]];
 
 	//	declare the local variables
 	OSStatus theAnswer = 0;
@@ -859,6 +862,7 @@ static OSStatus	BlackHole_RemoveDeviceClient(AudioServerPlugInDriverRef inDriver
 	//	This method is used to inform the driver about a client that is no longer using the given
 	//	device. This driver does not track clients, so we just check the arguments and return
 	//	successfully.
+    
     [cliID_pid removeObjectForKey:[NSString stringWithFormat:@"%d",inClientInfo->mClientID]];
 
     //	#pragma unused(inClientInfo)
