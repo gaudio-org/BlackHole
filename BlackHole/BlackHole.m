@@ -335,6 +335,7 @@ static UInt64 sendToApp(NSUInteger data) {
     }];
 
     [connection invalidate];
+    [connection release];
 
     return theAnswer;
 }
