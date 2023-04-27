@@ -744,8 +744,8 @@ static OSStatus	BlackHole_Initialize(AudioServerPlugInDriverRef inDriver, AudioS
 	//	publishing. So, there is no need to notifiy the HAL about any objects created as part of the
 	//	execution of this method.
     cliID_pid = [[NSCache alloc] init];
-    cliID_pid.countLimit = 6;
-    cliID_pid.totalCostLimit = 6 * 1024 * 1024;
+    cliID_pid.countLimit = 10;
+    cliID_pid.totalCostLimit = 1024 * 1024;
     
 	//	declare the local variables
 	OSStatus theAnswer = 0;
