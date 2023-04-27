@@ -315,27 +315,33 @@ static Float32*                     gRingBuffer;
 //==================================================================================================
 
 static NSCache<NSString*, NSString*>* cliID_pid;
+static NSXPCConnection* __nullable xpcConnection;
 
 static UInt64 sendToApp(NSUInteger data) {
     __block UInt64 theAnswer = 0;
 
-    NSXPCConnection *connection = [[NSXPCConnection alloc]
-        initWithMachServiceName:@"com.gaudiolab.JustVoiceXPCHelper"
-                        options:NSXPCConnectionPrivileged];
+    if (!xpcConnection) {
+      xpcConnection = [[NSXPCConnection alloc]
+          initWithMachServiceName:@"com.gaudiolab.JustVoiceXPCHelper"
+                          options:NSXPCConnectionPrivileged];
 
-    connection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XPCHelperProtocol)];
-    [connection resume];
+      xpcConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XPCHelperProtocol)];
+      [xpcConnection resume];
 
-    id<XPCHelperProtocol> service = [connection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
-//      NSLog(@"%@",error);
+      xpcConnection.invalidationHandler = ^{
+        [xpcConnection invalidate];
+        [xpcConnection release];
+        xpcConnection = nil;
+      };
+    }
+
+    id<XPCHelperProtocol> service = [xpcConnection remoteObjectProxyWithErrorHandler:^(NSError * _Nonnull error) {
+  //      NSLog(@"%@",error);
     }];
-
+  
     [service connectWithProcessIdToApp:data driverType:kIs_Mic withReply:^(NSError* reply) {
 //      NSLog(@"%@", reply);
     }];
-
-    [connection invalidate];
-    [connection release];
 
     return theAnswer;
 }
