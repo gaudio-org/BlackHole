@@ -6,7 +6,7 @@ mkdir installer/root
 driverName="JustVoice"
 icon="JustVoice.icns"
 
-for driverType in "MIC" "SPK"
+for driverType in "SPK"
 do
     if [ ${driverType} = "MIC" ];
     then

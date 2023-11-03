@@ -2,7 +2,7 @@
 
 driverName="JustVoice"
 
-for driverType in "MIC" "SPK"
+for driverType in "SPK"
 do
     sudo rm -rf /Library/Audio/Plug-Ins/HAL/${driverName}${driverType}.driver
     sudo cp -R Installer/root/${driverName}${driverType}.driver /Library/Audio/Plug-Ins/HAL

@@ -4064,18 +4064,18 @@ static OSStatus	BlackHole_WillDoIOOperation(AudioServerPlugInDriverRef inDriver,
 			willDoInPlace = true;
 			break;
     case kAudioServerPlugInIOOperationProcessInput: {
-        if (kIs_Mic) {
-          willDo = true;
-        }
-        break;
+      if (kIs_Mic) {
+        willDo = true;
       }
+      break;
+    }
     case kAudioServerPlugInIOOperationProcessOutput: {
       if (!kIs_Mic) {
         willDo = true;
       }
       break;
     }
-	};
+  };
 	
 	//	fill out the return values
 	if(outWillDo != NULL)
