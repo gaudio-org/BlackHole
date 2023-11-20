@@ -11,7 +11,6 @@
 //==================================================================================================
 //	Includes
 //==================================================================================================
-#include "XPCHelperProtocol.h"
 #include <Foundation/Foundation.h>
 
 #include <CoreAudio/AudioServerPlugIn.h>
@@ -133,10 +132,6 @@ struct ObjectInfo {
 #define kDriver_Name "JustVoice"
 #endif
 
-#ifndef kDriver_Type
-#define kDriver_Type "MIC"
-#endif
-
 #ifndef kPlugIn_BundleID
 #define kPlugIn_BundleID "audio.driver.JustVoice"
 #endif
@@ -150,31 +145,31 @@ struct ObjectInfo {
 #endif
 
 #if kHas_Driver_Name_Format
-#define kBox_UID kDriver_Name kDriver_Type "_UID"
-#define kDevice_UID kDriver_Name kDriver_Type "_UID"
-#define kDevice2_UID kDriver_Name kDriver_Type "_2_UID"
-#define kDevice_ModelUID kDriver_Name kDriver_Type "_ModelUID"
+#define kBox_UID kDriver_Name "_UID"
+#define kDevice_UID kDriver_Name "_UID"
+#define kDevice2_UID kDriver_Name "_2_UID"
+#define kDevice_ModelUID kDriver_Name "_ModelUID"
 
 #ifndef kDevice_Name
-#define kDevice_Name kDriver_Name " " kDriver_Type
+#define kDevice_Name kDriver_Name
 #endif
 
 #ifndef kDevice2_Name
-#define kDevice2_Name kDriver_Name " " kDriver_Type " 2"
+#define kDevice2_Name kDriver_Name " 2"
 #endif
 
 #else  // #if kHas_Driver_Name_Format
-#define kBox_UID kDriver_Name kDriver_Type "_UID"
-#define kDevice_UID kDriver_Name kDriver_Type "_UID"
-#define kDevice2_UID kDriver_Name kDriver_Type "_2_UID"
-#define kDevice_ModelUID kDriver_Name kDriver_Type "_ModelUID"
+#define kBox_UID kDriver_Name "_UID"
+#define kDevice_UID kDriver_Name "_UID"
+#define kDevice2_UID kDriver_Name "_2_UID"
+#define kDevice_ModelUID kDriver_Name "_ModelUID"
 
 #ifndef kDevice_Name
-#define kDevice_Name kDriver_Name " " kDriver_Type
+#define kDevice_Name kDriver_Name
 #endif
 
 #ifndef kDevice2_Name
-#define kDevice2_Name kDriver_Name " " kDriver_Type " Mirror"
+#define kDevice2_Name kDriver_Name " Mirror"
 #endif
 
 #endif  // #if kHas_Driver_Name_Format
@@ -286,47 +281,7 @@ static const UInt32 kDevice_SampleRatesSize = sizeof(kDevice_SampleRates) / size
 #define kBytes_Per_Channel (kBits_Per_Channel / 8)
 #define kBytes_Per_Frame (kNumber_Of_Channels * kBytes_Per_Channel)
 #define kRing_Buffer_Frame_Size ((65536 + kLatency_Frame_Size))
-#define kIs_Mic (strcmp(kDriver_Type, "MIC") == 0) ? true : false
 static Float32* gRingBuffer;
-
-//==================================================================================================
-#pragma mark -
-#pragma mark JustVoice Connection
-//==================================================================================================
-
-static NSCache<NSString*, NSString*>* cliID_pid;
-static NSXPCConnection* __nullable xpcConnection;
-
-static UInt64 sendToApp(NSUInteger data) {
-  __block UInt64 theAnswer = 0;
-
-  if (!xpcConnection) {
-    xpcConnection = [[NSXPCConnection alloc]
-        initWithMachServiceName:@"com.gaudiolab.JustVoiceXPCHelper"
-                        options:NSXPCConnectionPrivileged];
-
-    xpcConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(XPCHelperProtocol)];
-    [xpcConnection resume];
-
-    xpcConnection.invalidationHandler = ^{
-      [xpcConnection invalidate];
-      [xpcConnection release];
-      xpcConnection = nil;
-    };
-  }
-
-  id<XPCHelperProtocol> service = [xpcConnection remoteObjectProxyWithErrorHandler:^(NSError* _Nonnull error){
-      //      NSLog(@"%@",error);
-  }];
-
-  [service connectWithProcessIdToApp:data
-                          driverType:kIs_Mic
-                           withReply:^(NSError* reply){
-                               //      NSLog(@"%@", reply);
-                           }];
-
-  return theAnswer;
-}
 
 //==================================================================================================
 #pragma mark -
@@ -674,9 +629,6 @@ static OSStatus BlackHole_Initialize(AudioServerPlugInDriverRef inDriver, AudioS
   //	maintains (such as the device list) to get the inital set of objects the driver is
   //	publishing. So, there is no need to notifiy the HAL about any objects created as part of the
   //	execution of this method.
-  cliID_pid = [[NSCache alloc] init];
-  cliID_pid.countLimit = 10;
-  cliID_pid.totalCostLimit = 1024 * 1024;
 
   //	declare the local variables
   OSStatus theAnswer = 0;
@@ -770,8 +722,6 @@ static OSStatus BlackHole_AddDeviceClient(AudioServerPlugInDriverRef inDriver, A
   //	This allows the device to act differently depending on who the client is. This driver does
   //	not need to track the clients using the device, so we just check the arguments and return
   //	successfully.
-  NSString* val = [NSString stringWithFormat:@"%d", inClientInfo->mProcessID];
-  [cliID_pid setObject:val forKey:[NSString stringWithFormat:@"%d", inClientInfo->mClientID]];
 
   //	declare the local variables
   OSStatus theAnswer = 0;
@@ -789,8 +739,6 @@ static OSStatus BlackHole_RemoveDeviceClient(AudioServerPlugInDriverRef inDriver
   //	This method is used to inform the driver about a client that is no longer using the given
   //	device. This driver does not track clients, so we just check the arguments and return
   //	successfully.
-
-  [cliID_pid removeObjectForKey:[NSString stringWithFormat:@"%d", inClientInfo->mClientID]];
 
   //	#pragma unused(inClientInfo)
 
@@ -3807,15 +3755,10 @@ static OSStatus BlackHole_WillDoIOOperation(AudioServerPlugInDriverRef inDriver,
       willDoInPlace = true;
       break;
     case kAudioServerPlugInIOOperationProcessInput: {
-      if (kIs_Mic) {
-        willDo = true;
-      }
       break;
     }
     case kAudioServerPlugInIOOperationProcessOutput: {
-      if (!kIs_Mic) {
-        willDo = true;
-      }
+      willDo = true;
       break;
     }
   };
@@ -3915,12 +3858,6 @@ static OSStatus BlackHole_DoIOOperation(AudioServerPlugInDriverRef inDriver, Aud
     // Save the last output time.
     lastOutputSampleTime = inIOCycleInfo->mOutputTime.mSampleTime + inIOBufferFrameSize;
     isBufferClear = false;
-  }
-
-  if (inOperationID == kAudioServerPlugInIOOperationProcessInput ||
-      inOperationID == kAudioServerPlugInIOOperationProcessOutput) {
-    // 계속 쏘기 주기 줄이고 싶으면? inIOCycleInfo->mIOCycleCounter
-    sendToApp([[cliID_pid objectForKey:[NSString stringWithFormat:@"%d", inClientID]] intValue]);
   }
 
 Done:

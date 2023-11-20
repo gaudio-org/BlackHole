@@ -2,11 +2,8 @@
 
 driverName="JustVoice"
 
-for driverType in "SPK"
-do
-    sudo rm -rf /Library/Audio/Plug-Ins/HAL/${driverName}${driverType}.driver
-    sudo cp -R Installer/root/${driverName}${driverType}.driver /Library/Audio/Plug-Ins/HAL
-    rm -rf Installer/root/${driverName}${driverType}.driver
-done
+sudo rm -rf /Library/Audio/Plug-Ins/HAL/${driverName}.driver
+sudo cp -R Installer/root/${driverName}.driver /Library/Audio/Plug-Ins/HAL
+rm -rf Installer/root/${driverName}.driver
 
 sudo launchctl kickstart -kp system/com.apple.audio.coreaudiod
