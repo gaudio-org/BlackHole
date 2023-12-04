@@ -183,7 +183,7 @@ struct ObjectInfo {
 #endif
 
 #ifndef kDevice_HasInput
-#define kDevice_HasInput true
+#define kDevice_HasInput false
 #endif
 
 #ifndef kDevice_HasOutput
@@ -195,7 +195,7 @@ struct ObjectInfo {
 #endif
 
 #ifndef kDevice2_HasOutput
-#define kDevice2_HasOutput true
+#define kDevice2_HasOutput false
 #endif
 
 #ifndef kManufacturer_Name
