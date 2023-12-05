@@ -16,7 +16,7 @@
 		3D8966432849C318002AB3F0 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D7477AC1578168D00412279 /* CoreFoundation.framework */; };
 		3D8966462849C318002AB3F0 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 03FDCADB233FAE0500101681 /* LICENSE */; };
 		3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 039FF2572341B6E800400D7A /* CHANGELOG.md */; };
-		B0DCD25429DAAE700007F938 /* JustVoice.icns in Resources */ = {isa = PBXBuildFile; fileRef = B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */; };
+		B0DCD25429DAAE700007F938 /* appicon_JustVoiceAddOn.icns in Resources */ = {isa = PBXBuildFile; fileRef = B06EAA0929CD3D1A00349AE0 /* appicon_JustVoiceAddOn.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,7 +54,7 @@
 		3D8966882849D45F002AB3F0 /* postinstall */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = postinstall; sourceTree = "<group>"; };
 		3D8966892849D45F002AB3F0 /* preinstall */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = preinstall; sourceTree = "<group>"; };
 		B00637E6292F03C300D50A5A /* XPCHelperProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPCHelperProtocol.h; sourceTree = "<group>"; };
-		B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = JustVoice.icns; sourceTree = "<group>"; };
+		B06EAA0929CD3D1A00349AE0 /* appicon_JustVoiceAddOn.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = appicon_JustVoiceAddOn.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,7 +81,7 @@
 		2D616EF015B8C82500D598BD /* BlackHole */ = {
 			isa = PBXGroup;
 			children = (
-				B06EAA0929CD3D1A00349AE0 /* JustVoice.icns */,
+				B06EAA0929CD3D1A00349AE0 /* appicon_JustVoiceAddOn.icns */,
 				B00637E6292F03C300D50A5A /* XPCHelperProtocol.h */,
 				3D08380E284A7DE100C69403 /* BlackHole.plist */,
 				03FDCAD9233F235500101681 /* BlackHole.icns */,
@@ -235,7 +235,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0DCD25429DAAE700007F938 /* JustVoice.icns in Resources */,
+				B0DCD25429DAAE700007F938 /* appicon_JustVoiceAddOn.icns in Resources */,
 				3D8966462849C318002AB3F0 /* LICENSE in Resources */,
 				3D8966482849C318002AB3F0 /* CHANGELOG.md in Resources */,
 				3D083818284A7F1200C69403 /* VERSION in Resources */,
