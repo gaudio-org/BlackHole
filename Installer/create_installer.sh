@@ -4,7 +4,7 @@ rm -rf installer/root
 mkdir installer/root
 
 driverName="JustVoice"
-icon="JustVoice.icns"
+icon="appicon_JustVoiceAddOn.icns"
 channels=2
 
 bundleID="gaudio.driver.${driverName}"

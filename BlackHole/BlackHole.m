@@ -137,7 +137,7 @@ struct ObjectInfo {
 #endif
 
 #ifndef kPlugIn_Icon
-#define kPlugIn_Icon "JustVoice.icns"
+#define kPlugIn_Icon "appicon_JustVoiceAddOn.icns"
 #endif
 
 #ifndef kHas_Driver_Name_Format
