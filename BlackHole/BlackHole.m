@@ -62,7 +62,9 @@
 
 #define FailWithAction(inCondition, inAction, inHandler, inMessage) \
   if (inCondition) {                                                \
-    { inAction; }                                                   \
+    {                                                               \
+      inAction;                                                     \
+    }                                                               \
     goto inHandler;                                                 \
   }
 
@@ -129,7 +131,7 @@ struct ObjectInfo {
 //    Note also that we share a single mutex across all objects to be thread safe for the same reason.
 
 #ifndef kDriver_Name
-#define kDriver_Name "JustVoice"
+#define kDriver_Name "Just Voice"
 #endif
 
 #ifndef kPlugIn_BundleID

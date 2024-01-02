@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-driverName="JustVoice"
+driverName="Just\ Voice"
 
 sudo rm -rf /Library/Audio/Plug-Ins/HAL/${driverName}.driver
 sudo cp -R Installer/root/${driverName}.driver /Library/Audio/Plug-Ins/HAL

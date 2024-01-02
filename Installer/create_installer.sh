@@ -3,11 +3,11 @@
 rm -rf installer/root
 mkdir installer/root
 
-driverName="JustVoice"
+driverName="Just\ Voice"
 icon="appicon_JustVoiceAddOn.icns"
 channels=2
 
-bundleID="gaudio.driver.${driverName}"
+bundleID="com.gaudiolab.jv.driver.spk"
 
 # Build
 xcodebuild \
@@ -24,12 +24,12 @@ mv build/JustVoice.driver installer/root/${driverName}.driver
 rm -r build
 
 # Sign
-codesign --force --deep --options runtime --sign 'Developer ID Application: Gaudio Lab (BPQH2TQNZ4)' Installer/root/${driverName}.driver
+codesign --force --deep --options runtime --sign 'Developer ID Application: Gaudio Lab, Inc. (ZFAQ5383J4)' Installer/root/${driverName}.driver
 
 # TODO:zip
 
 # notarization
-# xcrun altool --notarize-app --primary-bundle-id "gaudio.driver.JustVoice" --username "info@gaudiolab.com" --password "iego-linv-bbgk-azmn" --asc-provider "BPQH2TQNZ4" --file Installer/root/JustVoice.driver.zip
+# xcrun altool --notarize-app --primary-bundle-id "gaudio.driver.JustVoice" --username "info@gaudiolab.com" --password "iego-linv-bbgk-azmn" --asc-provider "ZFAQ5383J4" --file Installer/root/JustVoice.driver.zip
 
 # check notarization
 # xcrun altool --notarization-history 0 -u "info@gaudiolab.com" -p "iego-linv-bbgk-azmn"

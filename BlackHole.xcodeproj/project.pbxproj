@@ -207,7 +207,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					3D89663D2849C318002AB3F0 = {
-						DevelopmentTeam = BPQH2TQNZ4;
+						DevelopmentTeam = ZFAQ5383J4;
 					};
 				};
 			};
@@ -548,7 +548,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = BPQH2TQNZ4;
+				DEVELOPMENT_TEAM = ZFAQ5383J4;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"DEBUG=0",
@@ -556,7 +556,7 @@
 				INFOPLIST_FILE = BlackHole/BlackHole.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JustVoice;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaudiolab.jv.driver.spk;
 				PRODUCT_NAME = JustVoice;
 				WRAPPER_EXTENSION = driver;
 			};
@@ -568,7 +568,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = BPQH2TQNZ4;
+				DEVELOPMENT_TEAM = ZFAQ5383J4;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"DEBUG=1",
@@ -576,7 +576,7 @@
 				INFOPLIST_FILE = BlackHole/BlackHole.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JustVoice;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaudiolab.jv.driver.spk;
 				PRODUCT_NAME = JustVoice;
 				WRAPPER_EXTENSION = driver;
 			};
@@ -588,7 +588,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = BPQH2TQNZ4;
+				DEVELOPMENT_TEAM = ZFAQ5383J4;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"DEBUG=1",
@@ -596,7 +596,7 @@
 				INFOPLIST_FILE = BlackHole/BlackHole.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Audio/Plug-Ins/HAL";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = audio.driver.JustVoice;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaudiolab.jv.driver.spk;
 				PRODUCT_NAME = JustVoice;
 				WRAPPER_EXTENSION = driver;
 			};
