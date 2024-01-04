@@ -211,7 +211,7 @@ struct ObjectInfo {
 #endif
 
 #ifndef kEnableVolumeControl
-#define kEnableVolumeControl true
+#define kEnableVolumeControl false
 #endif
 
 static pthread_mutex_t gPlugIn_StateMutex = PTHREAD_MUTEX_INITIALIZER;
