@@ -201,7 +201,7 @@ struct ObjectInfo {
 #endif
 
 #ifndef kManufacturer_Name
-#define kManufacturer_Name "Existential Audio Inc."
+#define kManufacturer_Name "Gaudio Lab, Inc."
 #endif
 
 #define kLatency_Frame_Size 0
@@ -2395,8 +2395,11 @@ static OSStatus BlackHole_GetDevicePropertyData(AudioServerPlugInDriverRef inDri
       //	This property returns the presentation latency of the device. For this,
       //	device, the value is 0 due to the fact that it always vends silence.
       FailWithAction(inDataSize < sizeof(UInt32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyLatency for the device");
-      *((UInt32*)outData) = 0;
-      *outDataSize = sizeof(UInt32);
+      if (inAddress->mScope == kAudioObjectPropertyScopeOutput) {
+        *((UInt32*)outData) = 9600;
+      } else {
+        *((UInt32*)outData) = 0;
+      }
       break;
 
     case kAudioDevicePropertyStreams:
