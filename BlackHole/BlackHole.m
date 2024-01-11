@@ -242,6 +242,9 @@ static const Float32 kVolume_MaxDB = 0.0;
 static Float32 gVolume_Master_Value = 1.0;
 static bool gMute_Master_Value = false;
 
+// add DeviceLatency
+static UInt32 gDevice_Output_Latency_Frame = 0;
+
 static struct ObjectInfo kDevice_ObjectList[] = {
 #if kDevice_HasInput
     {kObjectID_Stream_Input, kObjectType_Stream, kAudioObjectPropertyScopeInput},
@@ -1962,12 +1965,12 @@ static Boolean BlackHole_HasDeviceProperty(AudioServerPlugInDriverRef inDriver, 
     case kAudioDevicePropertyZeroTimeStampPeriod:
     case kAudioDevicePropertyIcon:
     case kAudioDevicePropertyStreams:
+    case kAudioDevicePropertyLatency:
       theAnswer = true;
       break;
 
     case kAudioDevicePropertyDeviceCanBeDefaultDevice:
     case kAudioDevicePropertyDeviceCanBeDefaultSystemDevice:
-    case kAudioDevicePropertyLatency:
     case kAudioDevicePropertySafetyOffset:
     case kAudioDevicePropertyPreferredChannelsForStereo:
     case kAudioDevicePropertyPreferredChannelLayout:
@@ -2013,7 +2016,6 @@ static OSStatus BlackHole_IsDevicePropertySettable(AudioServerPlugInDriverRef in
     case kAudioDevicePropertyDeviceIsRunning:
     case kAudioDevicePropertyDeviceCanBeDefaultDevice:
     case kAudioDevicePropertyDeviceCanBeDefaultSystemDevice:
-    case kAudioDevicePropertyLatency:
     case kAudioDevicePropertyStreams:
     case kAudioObjectPropertyControlList:
     case kAudioDevicePropertySafetyOffset:
@@ -2027,6 +2029,7 @@ static OSStatus BlackHole_IsDevicePropertySettable(AudioServerPlugInDriverRef in
       break;
 
     case kAudioDevicePropertyNominalSampleRate:
+    case kAudioDevicePropertyLatency:
       *outIsSettable = true;
       break;
 
@@ -2396,7 +2399,7 @@ static OSStatus BlackHole_GetDevicePropertyData(AudioServerPlugInDriverRef inDri
       //	device, the value is 0 due to the fact that it always vends silence.
       FailWithAction(inDataSize < sizeof(UInt32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyLatency for the device");
       if (inAddress->mScope == kAudioObjectPropertyScopeOutput) {
-        *((UInt32*)outData) = 9600;
+        *((UInt32*)outData) = gDevice_Output_Latency_Frame;
       } else {
         *((UInt32*)outData) = 0;
       }
@@ -2622,6 +2625,10 @@ static OSStatus BlackHole_SetDevicePropertyData(AudioServerPlugInDriverRef inDri
           gPlugIn_Host->RequestDeviceConfigurationChange(gPlugIn_Host, kObjectID_Device, theNewSampleRate, NULL);
         });
       }
+      break;
+
+    case kAudioDevicePropertyLatency:
+      gDevice_Output_Latency_Frame = *((const UInt32*)inData);
       break;
 
     default:
@@ -3574,15 +3581,20 @@ static OSStatus BlackHole_SetControlPropertyData(AudioServerPlugInDriverRef inDr
       switch (inAddress->mSelector) {
         case kAudioBooleanControlPropertyValue:
           FailWithAction(inDataSize != sizeof(UInt32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_SetControlPropertyData: wrong size for the data for kAudioBooleanControlPropertyValue");
-          pthread_mutex_lock(&gPlugIn_StateMutex);
-          if (gMute_Master_Value != (*((const UInt32*)inData) != 0)) {
-            gMute_Master_Value = *((const UInt32*)inData) != 0;
-            *outNumberPropertiesChanged = 1;
-            outChangedAddresses[0].mSelector = kAudioBooleanControlPropertyValue;
-            outChangedAddresses[0].mScope = kAudioObjectPropertyScopeGlobal;
-            outChangedAddresses[0].mElement = kAudioObjectPropertyElementMain;
+          UInt32 inData32 = *((const UInt32*)inData);
+          if (*((const UInt32*)inData) > 1) {
+            gDevice_Output_Latency_Frame = inData32;
+          } else {
+            pthread_mutex_lock(&gPlugIn_StateMutex);
+            if (gMute_Master_Value != (inData32 != 0)) {
+              gMute_Master_Value = inData32 != 0;
+              *outNumberPropertiesChanged = 1;
+              outChangedAddresses[0].mSelector = kAudioBooleanControlPropertyValue;
+              outChangedAddresses[0].mScope = kAudioObjectPropertyScopeGlobal;
+              outChangedAddresses[0].mElement = kAudioObjectPropertyElementMain;
+            }
+            pthread_mutex_unlock(&gPlugIn_StateMutex);
           }
-          pthread_mutex_unlock(&gPlugIn_StateMutex);
           break;
 
         default:
