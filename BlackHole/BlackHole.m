@@ -131,7 +131,7 @@ struct ObjectInfo {
 //    Note also that we share a single mutex across all objects to be thread safe for the same reason.
 
 #ifndef kDriver_Name
-#define kDriver_Name "Just Voice"
+#define kDriver_Name "Just Voice Lite"
 #endif
 
 #ifndef kPlugIn_BundleID

@@ -3,7 +3,7 @@
 rm -rf installer/root
 mkdir installer/root
 
-driverName="Just\ Voice"
+driverName="Just\ Voice\ Lite"
 icon="appicon_JustVoiceAddOn.icns"
 channels=2
 
